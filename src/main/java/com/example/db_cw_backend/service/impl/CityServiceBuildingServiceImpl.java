@@ -13,6 +13,8 @@ public class CityServiceBuildingServiceImpl implements CityServiceBuildingServic
         CityServiceBuildingEntity entity = new CityServiceBuildingEntity();
         entity.setServiceId(data.getServiceId());
         entity.setBuildingId(data.getBuildingId());
+        entity.setCityServiceByServiceId(data.getCityServiceByServiceId());
+        entity.setBuildingByBuildingId(data.getBuildingByBuildingId());
         return entity;
     }
 
@@ -21,6 +23,8 @@ public class CityServiceBuildingServiceImpl implements CityServiceBuildingServic
         CityServiceBuildingDto response = new CityServiceBuildingDto();
         response.setServiceId(entity.getServiceId());
         response.setBuildingId(entity.getBuildingId());
+        response.setCityServiceByServiceId(entity.getCityServiceByServiceId());
+        response.setBuildingByBuildingId(entity.getBuildingByBuildingId());
         return response;
     }
 }

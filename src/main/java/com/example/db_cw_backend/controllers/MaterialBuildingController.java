@@ -1,6 +1,8 @@
 package com.example.db_cw_backend.controllers;
 
+import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.MaterialBuildingEntity;
+import com.example.db_cw_backend.model.MaterialEntity;
 import com.example.db_cw_backend.repository.MaterialBuildingRepository;
 import com.example.db_cw_backend.service.MaterialBuildingService;
 import com.example.db_cw_backend.transfer.MaterialBuildingDto;
@@ -35,8 +37,8 @@ public class MaterialBuildingController {
     }
 
     @GetMapping("single")
-    public ResponseEntity getById(@RequestBody IdDto data){
-        MaterialBuildingEntity entity = repository.findById(data.getId()).get();
+    public ResponseEntity getById(@RequestParam Integer id){
+        MaterialBuildingEntity entity = repository.findById(id).get();
         return ResponseEntity.ok(service.prepareDto(entity));
     }
 

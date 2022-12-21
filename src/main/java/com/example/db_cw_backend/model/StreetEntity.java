@@ -1,16 +1,19 @@
 package com.example.db_cw_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "street", schema = "s285583", catalog = "studs")
+@Table(name = "street")
 public class StreetEntity {
     private Integer id;
     private String name;
-    private Integer quarterId;
+    private QuarterEntity quarter;
+    private List<StreetEntity> crossedStreets;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -43,13 +46,15 @@ public class StreetEntity {
         return Objects.hash(id, name);
     }
 
-    @Basic
-    @Column(name = "quarter_id", nullable = false)
-    public Integer getQuarterId() {
-        return quarterId;
+    @ManyToOne
+    @JoinColumn(name = "quarter_id", referencedColumnName = "id")
+    public QuarterEntity getQuarter() {
+        return quarter;
     }
 
-    public void setQuarterId(Integer quarterId) {
-        this.quarterId = quarterId;
+    public void setQuarter(QuarterEntity quarterByQuarterId) {
+        this.quarter = quarterByQuarterId;
     }
+
+
 }

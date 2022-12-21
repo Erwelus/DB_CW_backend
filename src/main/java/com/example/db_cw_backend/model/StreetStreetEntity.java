@@ -4,13 +4,16 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "street_street", schema = "s285583", catalog = "studs")
+@Table(name = "street_street")
 public class StreetStreetEntity {
     private Integer id;
     private Integer street1Id;
     private Integer street2Id;
+    private StreetEntity street1ByStreet1Id;
+    private StreetEntity street2ByStreet2Id;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -51,5 +54,23 @@ public class StreetStreetEntity {
 
     public void setStreet2Id(Integer street2Id) {
         this.street2Id = street2Id;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "street1_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public StreetEntity getStreet1ByStreet1Id() {
+        return street1ByStreet1Id;
+    }
+    public void setStreet1ByStreet1Id(StreetEntity street1ByStreet1Id) {
+        this.street1ByStreet1Id = street1ByStreet1Id;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "street2_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public StreetEntity getStreet2ByStreet2Id() {
+        return street2ByStreet2Id;
+    }
+    public void setStreet2ByStreet2Id(StreetEntity street2ByStreet2Id) {
+        this.street2ByStreet2Id = street2ByStreet2Id;
     }
 }

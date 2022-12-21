@@ -14,6 +14,8 @@ public class QuarterQuarterServiceImpl implements QuarterQuarterService {
         entity.setId(data.getId());
         entity.setQuarter1Id(data.getQuarter1Id());
         entity.setQuarter2Id(data.getQuarter2Id());
+        entity.setQuarter1Id(data.getQuarter1Id());
+        entity.setQuarter2Id(data.getQuarter2Id());
         return entity;
     }
 
@@ -21,6 +23,8 @@ public class QuarterQuarterServiceImpl implements QuarterQuarterService {
     public QuarterQuarterDto prepareDto(QuarterQuarterEntity entity) {
         QuarterQuarterDto response = new QuarterQuarterDto();
         response.setId(entity.getId());
+        response.setQuarter1Id(entity.getQuarter1Id());
+        response.setQuarter2Id(entity.getQuarter2Id());
         response.setQuarter1Id(entity.getQuarter1Id());
         response.setQuarter2Id(entity.getQuarter2Id());
         return response;

@@ -1,5 +1,6 @@
 package com.example.db_cw_backend.controllers;
 
+import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.CityServiceBuildingEntity;
 import com.example.db_cw_backend.model.QuarterEntity;
 import com.example.db_cw_backend.repository.CityServiceBuildingRepository;
@@ -8,8 +9,6 @@ import com.example.db_cw_backend.service.CityServiceBuildingService;
 import com.example.db_cw_backend.service.QuarterService;
 import com.example.db_cw_backend.transfer.CityServiceBuildingDto;
 import com.example.db_cw_backend.transfer.IdDto;
-import com.example.db_cw_backend.transfer.QuarterDto;
-import com.example.db_cw_backend.transfer.QuarterListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +39,8 @@ public class CityServiceBuildingController {
     }
 
     @GetMapping("single")
-    public ResponseEntity getById(@RequestBody IdDto data){
-        CityServiceBuildingEntity entity = repository.findById(data.getId()).get();
+    public ResponseEntity getById(@RequestParam Integer id){
+        CityServiceBuildingEntity entity = repository.findById(id).get();
         return ResponseEntity.ok(service.prepareDto(entity));
     }
 

@@ -27,7 +27,7 @@ public class JwtProvider {
 
     public String createToken(String username){
         Date now = new Date();
-        Date expired = new Date(now.getTime() + 15*1000*60);
+        Date expired = new Date(now.getTime() + 30*1000*60);
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(expired)
@@ -49,11 +49,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+        return req.getHeader("Authorization");
     }
 
     public Authentication getAuthentication(String token) {

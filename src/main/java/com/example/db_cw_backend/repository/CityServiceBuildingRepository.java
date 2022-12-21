@@ -9,4 +9,5 @@ import java.util.List;
 public interface CityServiceBuildingRepository extends CrudRepository<CityServiceBuildingEntity, Integer> {
     @Override
     List<CityServiceBuildingEntity> findAll();
+    List<CityServiceBuildingEntity> findAllByBuildingId(Integer id);
 }

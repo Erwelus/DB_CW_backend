@@ -1,5 +1,6 @@
 package com.example.db_cw_backend.controllers;
 
+import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.DeliveryServiceConstructionCrewEntity;
 import com.example.db_cw_backend.repository.DeliveryServiceConstructionCrewRepository;
 import com.example.db_cw_backend.service.DeliveryServiceConstructionCrewService;
@@ -35,8 +36,8 @@ public class DeliveryServiceConstructionCrewController {
     }
 
     @GetMapping("single")
-    public ResponseEntity getById(@RequestBody IdDto data){
-        DeliveryServiceConstructionCrewEntity entity = repository.findById(data.getId()).get();
+    public ResponseEntity getById(@RequestParam Integer id){
+        DeliveryServiceConstructionCrewEntity entity = repository.findById(id).get();
         return ResponseEntity.ok(service.prepareDto(entity));
     }
 

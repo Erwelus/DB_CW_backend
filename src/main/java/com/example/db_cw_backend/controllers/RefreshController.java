@@ -31,18 +31,18 @@ public class RefreshController {
 
     @PostMapping("/token")
     public ResponseEntity refreshToken(@RequestBody RefreshDto refreshDto){
-        String username = new String(Base64.getDecoder().decode(refreshDto.getRefresh_token())).split("&")[1];
+        String username = new String(Base64.getDecoder().decode(refreshDto.getRefreshToken())).split("&")[1];
         User user = userService.findByUsername(username);
         Map<Object, Object> response = new HashMap<>();
 
         if(user == null) throw new UsernameNotFoundException("User with username " + username + " not found");
 
-        if(user.getRefreshToken().equals(refreshDto.getRefresh_token())) {
+        if(user.getRefreshToken().equals(refreshDto.getRefreshToken())) {
             String token = jwtProvider.createToken(username);
             Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             response.put("username", username);
-            response.put("refresh_token", user.getRefreshToken());
+            response.put("refreshToken", user.getRefreshToken());
             response.put("token", token);
         }else throw new BadCredentialsException("Invalid refresh token");
 

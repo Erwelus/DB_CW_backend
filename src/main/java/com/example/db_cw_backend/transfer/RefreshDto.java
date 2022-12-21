@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class RefreshDto {
-    private String refresh_token;
+    private String refreshToken;
 }

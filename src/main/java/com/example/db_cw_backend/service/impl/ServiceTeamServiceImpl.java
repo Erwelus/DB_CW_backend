@@ -15,6 +15,8 @@ public class ServiceTeamServiceImpl implements ServiceTeamService {
         entity.setRate(data.getRate());
         entity.setQuarterId(data.getQuarterId());
         entity.setCityServiceId(data.getCityServiceId());
+        entity.setCityServiceByServiceId(data.getCityServiceByServiceId());
+        entity.setQuarterByQuarterId(data.getQuarterByQuarterId());
         return entity;
     }
 
@@ -25,6 +27,8 @@ public class ServiceTeamServiceImpl implements ServiceTeamService {
         response.setRate(entity.getRate());
         response.setQuarterId(entity.getQuarterId());
         response.setCityServiceId(entity.getCityServiceId());
+        response.setCityServiceByServiceId(entity.getCityServiceByServiceId());
+        response.setQuarterByQuarterId(entity.getQuarterByQuarterId());
         return response;
     }
 }

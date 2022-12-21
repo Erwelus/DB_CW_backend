@@ -14,6 +14,9 @@ public class RouteQuartersServiceImpl implements RouteQuartersService {
         entity.setRouteId(data.getRouteId());
         entity.setQuarterFrom(data.getQuarterFrom());
         entity.setQuarterTo(data.getQuarterTo());
+        entity.setRouteByRouteId(data.getRouteByRouteId());
+        entity.setQuarterByQuarterTo(data.getQuarterByQuarterTo());
+        entity.setQuarterByQuarterFrom(data.getQuarterByQuarterFrom());
         return entity;
     }
 
@@ -23,6 +26,9 @@ public class RouteQuartersServiceImpl implements RouteQuartersService {
         response.setRouteId(entity.getRouteId());
         response.setQuarterFrom(entity.getQuarterFrom());
         response.setQuarterTo(entity.getQuarterTo());
+        response.setRouteByRouteId(entity.getRouteByRouteId());
+        response.setQuarterByQuarterTo(entity.getQuarterByQuarterTo());
+        response.setQuarterByQuarterFrom(entity.getQuarterByQuarterFrom());
         return response;
     }
 }

@@ -24,24 +24,24 @@ public class PercentageController {
         this.quarterRepository = qr;
     }
 
-    @PostMapping("city")
+    @GetMapping("city")
     public ResponseEntity calculatePercentageForCity(){
         Map<Object, Object> response = new HashMap<>();
         response.put("result", generalRepository.countPercentageOfCity());
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("quarter")
-    public ResponseEntity calculatePercentageForQuarter(@RequestBody PercentageDto data){
+    @GetMapping("quarter")
+    public ResponseEntity calculatePercentageForQuarter(@RequestParam String name){
         Map<Object, Object> response = new HashMap<>();
-        response.put("result", quarterRepository.calculateReadinessPercentage(data.getId()));
+        response.put("result", quarterRepository.calculateReadinessPercentage(quarterRepository.findByName(name).getId()));
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("street")
-    public ResponseEntity calculatePercentageForBuilding(@RequestBody PercentageDto data){
+    @GetMapping("street")
+    public ResponseEntity calculatePercentageForStreet(@RequestParam String name){
         Map<Object, Object> response = new HashMap<>();
-        response.put("result", streetRepository.calculateReadinessPercentage(data.getId()));
+        response.put("result", streetRepository.calculateReadinessPercentage(streetRepository.findByName(name).getId()));
         return ResponseEntity.ok(response);
     }
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface MaterialBuildingRepository extends CrudRepository<MaterialBuildingEntity, Integer> {
     @Override
     List<MaterialBuildingEntity> findAll();
+    List<MaterialBuildingEntity> findAllByBuildingId(Integer id);
 }

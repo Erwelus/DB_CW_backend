@@ -4,14 +4,17 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "service_team", schema = "s285583", catalog = "studs")
+@Table(name = "service_team")
 public class ServiceTeamEntity {
     private Integer id;
     private Float rate;
     private Integer quarterId;
     private Integer cityServiceId;
+    private QuarterEntity quarterByQuarterId;
+    private CityServiceEntity cityServiceByServiceId;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -62,5 +65,23 @@ public class ServiceTeamEntity {
 
     public void setCityServiceId(Integer cityServiceId) {
         this.cityServiceId = cityServiceId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "quarter_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public QuarterEntity getQuarterByQuarterId() {
+        return quarterByQuarterId;
+    }
+    public void setQuarterByQuarterId(QuarterEntity quarterByQuarterId) {
+        this.quarterByQuarterId = quarterByQuarterId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "service_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public CityServiceEntity getCityServiceByServiceId() {
+        return cityServiceByServiceId;
+    }
+    public void setCityServiceByServiceId(CityServiceEntity cityServiceByServiceId) {
+        this.cityServiceByServiceId = cityServiceByServiceId;
     }
 }

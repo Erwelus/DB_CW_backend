@@ -4,12 +4,14 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "quarter", schema = "s285583", catalog = "studs")
+@Table(name = "quarter")
 public class QuarterEntity {
     private Integer id;
     private String name;
+    private ModelEntity model;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -64,5 +66,15 @@ public class QuarterEntity {
 
     public void setY(Integer y) {
         this.y = y;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "model_id", referencedColumnName = "id")
+    public ModelEntity getModel() {
+        return model;
+    }
+
+    public void setModel(ModelEntity model) {
+        this.model = model;
     }
 }

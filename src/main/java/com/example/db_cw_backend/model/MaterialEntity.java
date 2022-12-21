@@ -4,14 +4,16 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "material", schema = "s285583", catalog = "studs")
+@Table(name = "material")
 public class MaterialEntity {
     private Integer id;
     private String type;
     private Integer quantity;
     private Float price;
+    private ModelEntity model;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -49,6 +51,16 @@ public class MaterialEntity {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "model_id", referencedColumnName = "id")
+    public ModelEntity getModel() {
+        return model;
+    }
+
+    public void setModel(ModelEntity model) {
+        this.model = model;
     }
 
     @Override

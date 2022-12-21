@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "building", schema = "s285583", catalog = "studs")
+@Table(name = "building")
 public class BuildingEntity {
     private Integer id;
     private String type;
@@ -14,8 +14,12 @@ public class BuildingEntity {
     private Integer streetId;
     private Integer committeeId;
     private Integer crewId;
+    private StreetEntity streetByStreetId;
+    private ConstructionCrewEntity constructionCrewByCrewId;
+    private CommitteeEntity committeeByCommitteeId;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -93,6 +97,33 @@ public class BuildingEntity {
 
     public void setCrewId(Integer crewId) {
         this.crewId = crewId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "street_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public StreetEntity getStreetByStreetId() {
+        return streetByStreetId;
+    }
+    public void setStreetByStreetId(StreetEntity streetByStreetId) {
+        this.streetByStreetId = streetByStreetId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "crew_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public ConstructionCrewEntity getConstructionCrewByCrewId() {
+        return constructionCrewByCrewId;
+    }
+    public void setConstructionCrewByCrewId(ConstructionCrewEntity constructionCrew) {
+        this.constructionCrewByCrewId = constructionCrew;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "committee_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public CommitteeEntity getCommitteeByCommitteeId() {
+        return committeeByCommitteeId;
+    }
+    public void setCommitteeByCommitteeId(CommitteeEntity committee) {
+        this.committeeByCommitteeId = committee;
     }
 
     @Override

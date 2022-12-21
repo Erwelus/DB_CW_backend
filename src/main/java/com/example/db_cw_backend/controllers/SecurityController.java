@@ -48,7 +48,7 @@ public class SecurityController {
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
-            response.put("refresh_token", user.getRefreshToken());
+            response.put("refreshToken", user.getRefreshToken());
             response.put("token", token);
 
             return ResponseEntity.ok(response);
@@ -77,7 +77,7 @@ public class SecurityController {
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
-            response.put("refresh_token", user.getRefreshToken());
+            response.put("refreshToken", user.getRefreshToken());
             response.put("token", token);
 
             return ResponseEntity.ok(response);

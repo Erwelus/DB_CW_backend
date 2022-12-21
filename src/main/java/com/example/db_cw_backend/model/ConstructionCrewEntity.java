@@ -4,12 +4,14 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "construction_crew", schema = "s285583", catalog = "studs")
+@Table(name = "construction_crew")
 public class ConstructionCrewEntity {
     private Integer id;
     private Integer size;
+    private ModelEntity model;
 
     @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -27,6 +29,16 @@ public class ConstructionCrewEntity {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "model_id", referencedColumnName = "id")
+    public ModelEntity getModel() {
+        return model;
+    }
+
+    public void setModel(ModelEntity model) {
+        this.model = model;
     }
 
     @Override

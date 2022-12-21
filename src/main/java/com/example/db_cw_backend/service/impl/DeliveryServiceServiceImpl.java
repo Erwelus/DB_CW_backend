@@ -15,6 +15,7 @@ public class DeliveryServiceServiceImpl implements DeliveryServiceService {
         entity.setName(data.getName());
         entity.setRate(data.getRate());
         entity.setMaterialId(data.getMaterialId());
+        entity.setMaterialByMaterialId(data.getMaterialByMaterialId());
         return entity;
     }
 
@@ -25,6 +26,7 @@ public class DeliveryServiceServiceImpl implements DeliveryServiceService {
         response.setName(entity.getName());
         response.setRate(entity.getRate());
         response.setMaterialId(entity.getMaterialId());
+        response.setMaterialByMaterialId(entity.getMaterialByMaterialId());
         return response;
     }
 }

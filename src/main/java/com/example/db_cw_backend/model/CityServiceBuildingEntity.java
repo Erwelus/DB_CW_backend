@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "city_service_building", schema = "s285583", catalog = "studs")
+@Table(name = "city_service_building")
 @IdClass(CityServiceBuildingEntityPK.class)
 public class CityServiceBuildingEntity {
     private Integer serviceId;

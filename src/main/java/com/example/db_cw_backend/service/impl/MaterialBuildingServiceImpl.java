@@ -14,6 +14,8 @@ public class MaterialBuildingServiceImpl implements MaterialBuildingService {
         entity.setBuildingId(data.getBuildingId());
         entity.setMaterialId(data.getMaterialId());
         entity.setQuantity(data.getQuantity());
+        entity.setBuildingByBuildingId(data.getBuildingByBuildingId());
+        entity.setMaterialByMaterialId(data.getMaterialByMaterialId());
         return entity;
     }
 
@@ -23,6 +25,8 @@ public class MaterialBuildingServiceImpl implements MaterialBuildingService {
         response.setBuildingId(entity.getBuildingId());
         response.setMaterialId(entity.getMaterialId());
         response.setQuantity(entity.getQuantity());
+        response.setBuildingByBuildingId(entity.getBuildingByBuildingId());
+        response.setMaterialByMaterialId(entity.getMaterialByMaterialId());
         return response;
     }
 }

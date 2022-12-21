@@ -1,8 +1,10 @@
 package com.example.db_cw_backend.controllers;
 
+import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.CommitteeEntity;
 import com.example.db_cw_backend.repository.CommitteeRepository;
 import com.example.db_cw_backend.service.CommitteeService;
+import com.example.db_cw_backend.transfer.CityServiceDto;
 import com.example.db_cw_backend.transfer.CommitteeDto;
 import com.example.db_cw_backend.transfer.IdDto;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,11 @@ public class CommitteeController {
         return ResponseEntity.ok("");
     }
 
+    @PostMapping("update")
+    public ResponseEntity update(@RequestBody CommitteeDto data){
+        return save(data);
+    }
+
     @GetMapping("all")
     public ResponseEntity getAllQueries(){
         List<CommitteeEntity> entityList = repository.findAll();
@@ -35,21 +42,20 @@ public class CommitteeController {
     }
 
     @GetMapping("single")
-    public ResponseEntity getById(@RequestBody IdDto data){
-        CommitteeEntity entity = repository.findById(data.getId()).get();
+    public ResponseEntity getById(@RequestParam Integer id){
+        CommitteeEntity entity = repository.findById(id).get();
         return ResponseEntity.ok(service.prepareDto(entity));
     }
 
     @PostMapping("delete")
-    public ResponseEntity delete(@RequestBody CommitteeDto data){
-        repository.deleteById(data.getId());
+    public ResponseEntity delete(@RequestParam Integer id){
+        repository.deleteById(id);
         return ResponseEntity.ok("");
     }
 
-    @PostMapping("accept")
-    public ResponseEntity delete(@RequestBody IdDto data){
-        repository.acceptReadyBuildingsForCommittee(data.getId());
-        return ResponseEntity.ok("");
+    @GetMapping("accept")
+    public ResponseEntity accept(@RequestParam Integer id){
+        return ResponseEntity.ok(repository.acceptReadyBuildingsForCommittee(id));
     }
 
 }

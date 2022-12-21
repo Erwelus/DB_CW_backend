@@ -1,5 +1,6 @@
 package com.example.db_cw_backend.controllers;
 
+import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.RouteStreetEntity;
 import com.example.db_cw_backend.repository.RouteStreetRepository;
 import com.example.db_cw_backend.service.RouteStreetService;
@@ -35,8 +36,8 @@ public class RouteStreetController {
     }
 
     @GetMapping("single")
-    public ResponseEntity getById(@RequestBody IdDto data){
-        RouteStreetEntity entity = repository.findById(data.getId()).get();
+    public ResponseEntity getById(@RequestParam Integer id){
+        RouteStreetEntity entity = repository.findById(id).get();
         return ResponseEntity.ok(service.prepareDto(entity));
     }
 

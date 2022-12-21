@@ -14,6 +14,8 @@ public class DeliveryServiceConstructionCrewServiceImpl implements DeliveryServi
         DeliveryServiceConstructionCrewEntity entity = new DeliveryServiceConstructionCrewEntity();
         entity.setConstructionCrewId(data.getConstructionCrewId());
         entity.setDeliveryServiceId(data.getDeliveryServiceId());
+        entity.setConstructionCrewByConstructionCrewId(data.getConstructionCrewByConstructionCrewId());
+        entity.setDeliveryServiceByDeliveryServiceId(data.getDeliveryServiceByDeliveryServiceId());
         return entity;
     }
 
@@ -22,6 +24,8 @@ public class DeliveryServiceConstructionCrewServiceImpl implements DeliveryServi
         DeliveryServiceConstructionCrewDto response = new DeliveryServiceConstructionCrewDto();
         response.setConstructionCrewId(entity.getConstructionCrewId());
         response.setDeliveryServiceId(entity.getDeliveryServiceId());
+        response.setConstructionCrewByConstructionCrewId(entity.getConstructionCrewByConstructionCrewId());
+        response.setDeliveryServiceByDeliveryServiceId(entity.getDeliveryServiceByDeliveryServiceId());
         return response;
     }
 }

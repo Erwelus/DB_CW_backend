@@ -3,6 +3,7 @@ package com.example.db_cw_backend.controllers;
 import com.example.db_cw_backend.model.ConstructionCrewEntity;
 import com.example.db_cw_backend.repository.ConstructionCrewRepository;
 import com.example.db_cw_backend.service.ConstructionCrewService;
+import com.example.db_cw_backend.transfer.CityServiceDto;
 import com.example.db_cw_backend.transfer.ConstructionCrewDto;
 import com.example.db_cw_backend.transfer.IdDto;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,11 @@ public class ConstructionCrewController {
         return ResponseEntity.ok("");
     }
 
+    @PostMapping("update")
+    public ResponseEntity update(@RequestBody ConstructionCrewDto data){
+        return save(data);
+    }
+
     @GetMapping("all")
     public ResponseEntity getAllQueries(){
         List<ConstructionCrewEntity> entityList = repository.findAll();
@@ -35,14 +41,14 @@ public class ConstructionCrewController {
     }
 
     @GetMapping("single")
-    public ResponseEntity getById(@RequestBody IdDto data){
-        ConstructionCrewEntity entity = repository.findById(data.getId()).get();
+    public ResponseEntity getById(@RequestParam Integer id){
+        ConstructionCrewEntity entity = repository.findById(id).get();
         return ResponseEntity.ok(service.prepareDto(entity));
     }
 
     @PostMapping("delete")
-    public ResponseEntity delete(@RequestBody ConstructionCrewDto data){
-        repository.deleteById(data.getId());
+    public ResponseEntity delete(@RequestParam Integer id){
+        repository.deleteById(id);
         return ResponseEntity.ok("");
     }
 

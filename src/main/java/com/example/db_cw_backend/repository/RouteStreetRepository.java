@@ -9,4 +9,5 @@ import java.util.List;
 public interface RouteStreetRepository extends CrudRepository<RouteStreetEntity, Integer> {
     @Override
     List<RouteStreetEntity> findAll();
+    List<RouteStreetEntity> findAllByRouteId(Integer id);
 }

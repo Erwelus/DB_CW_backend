@@ -4,12 +4,13 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "route_street", schema = "s285583", catalog = "studs")
+@Table(name = "route_street")
 @IdClass(RouteStreetEntityPK.class)
 public class RouteStreetEntity {
     private Integer routeId;
     private Integer streetId;
     private RouteEntity routeByRouteId;
+    private StreetEntity streetByStreetId;
 
     @Id
     @Column(name = "route_id", nullable = false)
@@ -52,5 +53,14 @@ public class RouteStreetEntity {
 
     public void setRouteByRouteId(RouteEntity routeByRouteId) {
         this.routeByRouteId = routeByRouteId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "street_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public StreetEntity getStreetByStreetId() {
+        return streetByStreetId;
+    }
+    public void setStreetByStreetId(StreetEntity streetByStreetId) {
+        this.streetByStreetId = streetByStreetId;
     }
 }

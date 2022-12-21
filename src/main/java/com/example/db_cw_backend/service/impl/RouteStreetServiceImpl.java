@@ -13,6 +13,8 @@ public class RouteStreetServiceImpl implements RouteStreetService {
         RouteStreetEntity entity = new RouteStreetEntity();
         entity.setRouteId(data.getRouteId());
         entity.setStreetId(data.getStreetId());
+        entity.setStreetByStreetId(data.getStreetByStreetId());
+        entity.setRouteByRouteId(data.getRouteByRouteId());
         return entity;
     }
 
@@ -21,6 +23,8 @@ public class RouteStreetServiceImpl implements RouteStreetService {
         RouteStreetDto response = new RouteStreetDto();
         response.setRouteId(entity.getRouteId());
         response.setStreetId(entity.getStreetId());
+        response.setStreetByStreetId(entity.getStreetByStreetId());
+        response.setRouteByRouteId(entity.getRouteByRouteId());
         return response;
     }
 }
