@@ -1,57 +1,57 @@
 package com.example.db_cw_backend.controllers;
 
-import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.MaterialEntity;
-import com.example.db_cw_backend.repository.MaterialRepository;
 import com.example.db_cw_backend.service.MaterialService;
-import com.example.db_cw_backend.transfer.CityServiceDto;
 import com.example.db_cw_backend.transfer.MaterialDto;
-import com.example.db_cw_backend.transfer.IdDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/material/")
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/material")
 public class MaterialController {
+    private final MaterialService materialService;
+    private final ConversionService conversionService;
 
-    private final MaterialRepository repository;
-    private final MaterialService service;
-
-    public MaterialController(MaterialRepository repository, MaterialService service){
-        this.repository = repository;
-        this.service = service;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<MaterialDto> getById(@PathVariable Long model,
+                                                      @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(materialService.findById(id, model), MaterialDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody MaterialDto data){
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @GetMapping()
+    public ResponseEntity<List<MaterialDto>> getAll(@PathVariable Long model) {
+        return ResponseEntity.ok(materialService.findAll(model).stream()
+                .map(e -> conversionService.convert(e, MaterialDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody MaterialDto data){
-        data.setId(repository.findByType(data.getType()).getId());
-        return save(data);
+    @PostMapping()
+    public ResponseEntity<?> save(@PathVariable Long model,
+                                  @RequestBody MaterialDto dto) {
+        dto.setModelId(model);
+        materialService.save(conversionService.convert(dto, MaterialEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<MaterialEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        materialService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getByType(@RequestParam String type){
-        MaterialEntity entity = repository.findByType(type);
-        return ResponseEntity.ok(service.prepareDto(entity));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long model,
+                                        @PathVariable Long id,
+                                        @RequestBody MaterialDto dto) {
+        dto.setId(id);
+        dto.setModelId(model);
+        materialService.save(conversionService.convert(dto, MaterialEntity.class));
+        return ResponseEntity.ok().build();
     }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam String type){
-        repository.deleteByType(type);
-        return ResponseEntity.ok("");
-    }
-
 }

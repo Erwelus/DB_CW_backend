@@ -1,61 +1,57 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.DeliveryServiceEntity;
-import com.example.db_cw_backend.repository.DeliveryServiceRepository;
-import com.example.db_cw_backend.repository.MaterialRepository;
 import com.example.db_cw_backend.service.DeliveryServiceService;
-import com.example.db_cw_backend.transfer.CityServiceDto;
 import com.example.db_cw_backend.transfer.DeliveryServiceDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/delivery_service/")
-public class DeliveryServiceController {
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/material/{material}/delivery/")
+public class DeliveryServiceController extends AbstractController {
+    private final DeliveryServiceService deliveryServiceService;
+    private final ConversionService conversionService;
 
-    private final DeliveryServiceRepository repository;
-    private final DeliveryServiceService service;
-    private final MaterialRepository materialRepository;
-
-    public DeliveryServiceController(DeliveryServiceRepository repository, DeliveryServiceService service, MaterialRepository materialRepository){
-        this.repository = repository;
-        this.service = service;
-        this.materialRepository = materialRepository;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<DeliveryServiceDto> getById(@PathVariable Long material,
+                                                       @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(deliveryServiceService.findById(id, material), DeliveryServiceDto.class));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody DeliveryServiceDto data){
-        data.setId(repository.findByName(data.getName()).getId());
-        data.setMaterialId(materialRepository.findByType(data.getMaterialType()).getId());
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @GetMapping()
+    public ResponseEntity<List<DeliveryServiceDto>> getAll(@PathVariable Long material) {
+        return ResponseEntity.ok(deliveryServiceService.findAll(material).stream()
+                .map(e -> conversionService.convert(e, DeliveryServiceDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody DeliveryServiceDto data){
-        data.setMaterialId(materialRepository.findByType(data.getMaterialType()).getId());
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @PostMapping()
+    public ResponseEntity<?> save(@PathVariable Long material,
+                                  @RequestBody DeliveryServiceDto dto) {
+        dto.setMaterialId(material);
+        deliveryServiceService.save(conversionService.convert(dto, DeliveryServiceEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<DeliveryServiceEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        deliveryServiceService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getByName(@RequestParam String name){
-        DeliveryServiceEntity entity = repository.findByName(name);
-        return ResponseEntity.ok(service.prepareDto(entity));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long material,
+                                        @PathVariable Long id,
+                                        @RequestBody DeliveryServiceDto dto) {
+        dto.setId(id);
+        dto.setMaterialId(material);
+        deliveryServiceService.save(conversionService.convert(dto, DeliveryServiceEntity.class));
+        return ResponseEntity.ok().build();
     }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam String name){
-        repository.deleteByName(name);
-        return ResponseEntity.ok("");
-    }
-
 }

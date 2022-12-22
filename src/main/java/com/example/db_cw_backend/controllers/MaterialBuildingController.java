@@ -1,50 +1,39 @@
 package com.example.db_cw_backend.controllers;
 
-import com.example.db_cw_backend.model.BuildingEntity;
-import com.example.db_cw_backend.model.MaterialBuildingEntity;
-import com.example.db_cw_backend.model.MaterialEntity;
-import com.example.db_cw_backend.repository.MaterialBuildingRepository;
-import com.example.db_cw_backend.service.MaterialBuildingService;
-import com.example.db_cw_backend.transfer.MaterialBuildingDto;
-import com.example.db_cw_backend.transfer.IdDto;
+import com.example.db_cw_backend.model.MaterialInBuilding;
+import com.example.db_cw_backend.service.MaterialInBuildingService;
+import com.example.db_cw_backend.transfer.MaterialInBuildingDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/material_building/")
-public class MaterialBuildingController {
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/material_building/")
+public class MaterialBuildingController extends AbstractController {
+    private final MaterialInBuildingService materialInBuildingService;
+    private final ConversionService conversionService;
 
-    private final MaterialBuildingRepository repository;
-    private final MaterialBuildingService service;
-
-    public MaterialBuildingController(MaterialBuildingRepository repository, MaterialBuildingService service){
-        this.repository = repository;
-        this.service = service;
+    @GetMapping()
+    public ResponseEntity<List<MaterialInBuildingDto>> getAll() {
+        return ResponseEntity.ok(materialInBuildingService.findAll().stream()
+                .map(e -> conversionService.convert(e, MaterialInBuildingDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody MaterialBuildingDto data){
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @PostMapping()
+    public ResponseEntity<?> save(@RequestBody MaterialInBuildingDto dto) {
+        materialInBuildingService.save(conversionService.convert(dto, MaterialInBuilding.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<MaterialBuildingEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
-    }
-
-    @GetMapping("single")
-    public ResponseEntity getById(@RequestParam Integer id){
-        MaterialBuildingEntity entity = repository.findById(id).get();
-        return ResponseEntity.ok(service.prepareDto(entity));
-    }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestBody MaterialBuildingDto data){
-        repository.delete(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        materialInBuildingService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

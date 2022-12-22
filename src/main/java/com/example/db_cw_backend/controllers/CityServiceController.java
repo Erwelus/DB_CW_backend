@@ -12,25 +12,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/model/{model}/service")
 @RequiredArgsConstructor
-public class CityServiceController {
+public class CityServiceController extends AbstractController {
     private final CityServiceService cityServiceService;
     private final ConversionService conversionService;
 
-    @GetMapping(value = "/{model}/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<CityServiceDto> getById(@PathVariable Long model,
                                                @PathVariable Long id) {
         return ResponseEntity.ok(conversionService.convert(cityServiceService.findById(id, model), CityServiceDto.class));
     }
 
-    @GetMapping(value = "/{model}")
+    @GetMapping()
     public ResponseEntity<List<CityServiceDto>> getAll(@PathVariable Long model) {
         return ResponseEntity.ok(cityServiceService.findAll(model).stream()
                 .map(e -> conversionService.convert(e, CityServiceDto.class))
                 .collect(Collectors.toList()));
     }
 
-    @PostMapping(value = "/{model}")
+    @PostMapping()
     public ResponseEntity<?> save(@PathVariable Long model,
                                   @RequestBody CityServiceDto dto) {
         dto.setModelId(model);
@@ -38,13 +39,13 @@ public class CityServiceController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/{model}/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         cityServiceService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/{model}/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateById(@PathVariable Long model,
                                         @PathVariable Long id,
                                         @RequestBody CityServiceDto dto) {

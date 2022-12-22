@@ -36,10 +36,6 @@ public class BuildingService {
         repository.save(building);
     }
 
-    public List<BuildingEntity> findAllByStreet(Long streetId) {
-        return repository.findAllByStreetId(streetId);
-    }
-
     public Double calculateCost(BuildingEntity building) {
         Double materialCost = building.getMaterials().stream().mapToDouble(materialInBuilding -> {
             return materialInBuilding.getMaterial().getPrice() * materialInBuilding.getQuantity();

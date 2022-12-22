@@ -38,17 +38,13 @@ public class StreetService {
         repository.save(entity);
     }
 
-    public List<StreetEntity> findAllByQuarter(Long id) {
-        return repository.findAllByQuarterId(id);
-    }
-
     public Double calculateCost(Long id) {
-        List<BuildingEntity> buildings = buildingService.findAllByStreet(id);
+        List<BuildingEntity> buildings = buildingService.findAll(id);
         return buildings.stream().mapToDouble(buildingService::calculateCost).sum();
     }
 
-    public Integer getPercentage(Long id) {
-        List<BuildingEntity> buildings = buildingService.findAllByStreet(id);
-        return buildings.stream().mapToInt(BuildingEntity::getReadinessCoefficient).sum();
+    public Double getPercentage(Long id) {
+        List<BuildingEntity> buildings = buildingService.findAll(id);
+        return buildings.stream().mapToInt(BuildingEntity::getReadinessCoefficient).average().orElse(0);
     }
 }

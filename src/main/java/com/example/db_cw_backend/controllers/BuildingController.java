@@ -15,25 +15,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/model/{model}/quarter/{quarter}/street/{street}/building")
 @RequiredArgsConstructor
-public class BuildingController {
+public class BuildingController extends AbstractController {
     private final BuildingService buildingService;
     private final ConversionService conversionService;
 
-    @GetMapping(value = "/{model}/{quarter}/{street}/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<BuildingDto> getById(@PathVariable Long street,
                                                @PathVariable Long id) {
         return ResponseEntity.ok(conversionService.convert(buildingService.findById(id, street), BuildingDto.class));
     }
 
-    @GetMapping(value = "/{model}/{quarter}/{street}")
+    @GetMapping()
     public ResponseEntity<List<BuildingDto>> getAll(@PathVariable Long street) {
         return ResponseEntity.ok(buildingService.findAll(street).stream()
                 .map(e -> conversionService.convert(e, BuildingDto.class))
                 .collect(Collectors.toList()));
     }
 
-    @PostMapping(value = "/{model}/{quarter}/{street}")
+    @PostMapping()
     public ResponseEntity<?> save(@PathVariable Long street,
                                   @RequestBody BuildingDto dto) {
         dto.setStreetId(street);
@@ -41,13 +42,13 @@ public class BuildingController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/{model}/{quarter}/{street}/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         buildingService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/{model}/{quarter}/{street}/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateById(@PathVariable Long street,
                                         @PathVariable Long id,
                                         @RequestBody BuildingDto dto) {
@@ -55,5 +56,11 @@ public class BuildingController {
         dto.setStreetId(street);
         buildingService.save(conversionService.convert(dto, BuildingEntity.class));
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/{id}/cost")
+    public ResponseEntity<Double> getCost(@PathVariable Long street,
+                                          @PathVariable Long id) {
+        return ResponseEntity.ok(buildingService.calculateCost(buildingService.findById(id, street)));
     }
 }

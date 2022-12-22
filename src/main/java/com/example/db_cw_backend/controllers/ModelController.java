@@ -51,15 +51,13 @@ public class ModelController extends AbstractController{
     }
 
     @PostMapping(value = "/{id}/cost")
-    public ResponseEntity<?> getCost(@PathVariable Long id) {
-        modelService.calculateCost(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Double> getCost(@PathVariable Long id) {
+        return ResponseEntity.ok(modelService.calculateCost(id));
     }
 
     @PostMapping(value = "/{id}/percent")
-    public ResponseEntity<?> getPercent(@PathVariable Long id) {
-        modelService.getPercentage(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Double> getPercent(@PathVariable Long id) {
+        return ResponseEntity.ok(modelService.getPercentage(id));
     }
 
 }

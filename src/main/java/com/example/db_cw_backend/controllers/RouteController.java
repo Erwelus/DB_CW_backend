@@ -1,98 +1,57 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.RouteEntity;
-import com.example.db_cw_backend.model.RouteQuartersEntity;
-import com.example.db_cw_backend.model.RouteStreetEntity;
-import com.example.db_cw_backend.model.StreetEntity;
-import com.example.db_cw_backend.repository.*;
-import com.example.db_cw_backend.service.RouteQuartersService;
 import com.example.db_cw_backend.service.RouteService;
-import com.example.db_cw_backend.service.RouteStreetService;
 import com.example.db_cw_backend.transfer.RouteDto;
-import com.example.db_cw_backend.transfer.RouteQuartersDto;
-import com.example.db_cw_backend.transfer.RouteStreetDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/route/")
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/route/")
 public class RouteController {
+    private final RouteService routeService;
+    private final ConversionService conversionService;
 
-    private final RouteRepository repository;
-    private final QuarterRepository quarterRepository;
-    private final StreetRepository streetRepository;
-    private final RouteQuartersRepository routeQuartersRepository;
-    private final RouteStreetRepository routeStreetRepository;
-    private final RouteQuartersService quartersService;
-    private final RouteStreetService streetService;
-    private final RouteService service;
-
-    public RouteController(RouteRepository repository, QuarterRepository quarterRepository,
-                           StreetRepository streetRepository, RouteQuartersRepository routeQuartersRepository,
-                           RouteStreetRepository routeStreetRepository, RouteQuartersService quartersService,
-                           RouteStreetService streetService, RouteService service){
-        this.repository = repository;
-        this.quarterRepository = quarterRepository;
-        this.streetRepository = streetRepository;
-        this.routeQuartersRepository = routeQuartersRepository;
-        this.routeStreetRepository = routeStreetRepository;
-        this.quartersService = quartersService;
-        this.streetService = streetService;
-        this.service = service;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<RouteDto> getById(@PathVariable Long model,
+                                              @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(routeService.findById(id, model), RouteDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody RouteDto data){
-        RouteEntity entity = service.prepareEntity(data);
-        repository.save(entity);
-
-        RouteQuartersDto quartersDto = new RouteQuartersDto();
-        quartersDto.setRouteId(entity.getId());
-        quartersDto.setQuarterTo(quarterRepository.findByName(data.getQuarterTo()).getId());
-        quartersDto.setQuarterFrom(quarterRepository.findByName(data.getQuarterFrom()).getId());
-        routeQuartersRepository.save(quartersService.prepareEntity(quartersDto));
-
-        for (String streetName: data.getStreets()) {
-            RouteStreetDto streetDto = new RouteStreetDto();
-            streetDto.setRouteId(entity.getId());
-            streetDto.setStreetId(streetRepository.findByName(streetName).getId());
-            routeStreetRepository.save(streetService.prepareEntity(streetDto));
-        }
-        return ResponseEntity.ok("");
+    @GetMapping()
+    public ResponseEntity<List<RouteDto>> getAll(@PathVariable Long model) {
+        return ResponseEntity.ok(routeService.findAll(model).stream()
+                .map(e -> conversionService.convert(e, RouteDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody RouteDto data){
-        return save(data);
+    @PostMapping()
+    public ResponseEntity<?> save(@PathVariable Long model,
+                                  @RequestBody RouteDto dto) {
+        dto.setModelId(model);
+        routeService.save(conversionService.convert(dto, RouteEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<RouteEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        routeService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getById(@RequestParam Integer id){
-        RouteEntity entity = repository.findById(id).get();
-        RouteQuartersEntity quartersEntity = routeQuartersRepository.findByRouteId(id);
-        String quarterFrom = quartersEntity.getQuarterByQuarterFrom().getName();
-        String quarterTo = quartersEntity.getQuarterByQuarterTo().getName();
-        List<RouteStreetEntity> streetList = routeStreetRepository.findAllByRouteId(id);
-        List<String> streetNameList = new ArrayList<>(streetList.size());
-        for (RouteStreetEntity routeStreetEntity : streetList) {
-            streetNameList.add(routeStreetEntity.getStreetByStreetId().getName());
-        }
-        return ResponseEntity.ok(service.prepareDto(entity, quarterFrom, quarterTo, streetNameList));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long model,
+                                        @PathVariable Long id,
+                                        @RequestBody RouteDto dto) {
+        dto.setId(id);
+        dto.setModelId(model);
+        routeService.save(conversionService.convert(dto, RouteEntity.class));
+        return ResponseEntity.ok().build();
     }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam Integer id){
-        repository.deleteById(id);
-        return ResponseEntity.ok("");
-    }
-
 }

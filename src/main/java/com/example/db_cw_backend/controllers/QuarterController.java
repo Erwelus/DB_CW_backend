@@ -1,71 +1,67 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.QuarterEntity;
-import com.example.db_cw_backend.repository.QuarterRepository;
 import com.example.db_cw_backend.service.QuarterService;
 import com.example.db_cw_backend.transfer.QuarterDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/quarter/")
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/quarter/")
 public class QuarterController {
+    private final QuarterService quarterService;
+    private final ConversionService conversionService;
 
-    private final QuarterRepository repository;
-    private final QuarterService service;
-
-    public QuarterController(QuarterRepository qr, QuarterService qs){
-        this.repository = qr;
-        this.service = qs;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<QuarterDto> getById(@PathVariable Long model,
+                                               @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(quarterService.findById(id, model), QuarterDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody QuarterDto data){
-        if (data.getIndex() != null) {
-            data.setX(data.getIndex() % 7);
-            data.setY(data.getIndex() / 7);
-        }
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @GetMapping()
+    public ResponseEntity<List<QuarterDto>> getAll(@PathVariable Long model) {
+        return ResponseEntity.ok(quarterService.findAll(model).stream()
+                .map(e -> conversionService.convert(e, QuarterDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody QuarterDto data){
-        data.setId(repository.findByName(data.getOldName()).getId());
-        return save(data);
+    @PostMapping()
+    public ResponseEntity<?> save(@PathVariable Long model,
+                                  @RequestBody QuarterDto dto) {
+        dto.setModelId(model);
+        quarterService.save(conversionService.convert(dto, QuarterEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("map")
-    public ResponseEntity getMap(){
-        List<QuarterEntity> entityList = repository.findAll();
-        List<QuarterEntity> resultList = new ArrayList<>(28);
-        for (int i = 0; i < 28; i++) {
-            resultList.add(null);
-        }
-        for (QuarterEntity entity : entityList){
-            resultList.set(entity.getY()*7 + entity.getX(), entity);
-        }
-        return ResponseEntity.ok(resultList);
-    }
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<QuarterEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        quarterService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getByName(@RequestParam String name){
-        QuarterEntity entity = repository.findByName(name);
-        return ResponseEntity.ok(service.prepareDto(entity));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long model,
+                                        @PathVariable Long id,
+                                        @RequestBody QuarterDto dto) {
+        dto.setId(id);
+        dto.setModelId(model);
+        quarterService.save(conversionService.convert(dto, QuarterEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam String name){
-        repository.deleteByName(name);
-        return ResponseEntity.ok("");
+    @PostMapping(value = "/{id}/cost")
+    public ResponseEntity<Double> getCost(@PathVariable Long id) {
+        return ResponseEntity.ok(quarterService.calculateCost(id));
     }
 
+    @PostMapping(value = "/{id}/percent")
+    public ResponseEntity<Double> getPercent(@PathVariable Long id) {
+        return ResponseEntity.ok(quarterService.getPercentage(id));
+    }
 }

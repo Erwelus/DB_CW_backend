@@ -1,64 +1,57 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.ServiceTeamEntity;
-import com.example.db_cw_backend.repository.CityServiceRepository;
-import com.example.db_cw_backend.repository.MaterialRepository;
-import com.example.db_cw_backend.repository.QuarterRepository;
-import com.example.db_cw_backend.repository.ServiceTeamRepository;
 import com.example.db_cw_backend.service.ServiceTeamService;
-import com.example.db_cw_backend.transfer.RouteDto;
 import com.example.db_cw_backend.transfer.ServiceTeamDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/service_team/")
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/service/{service}/service_team/")
 public class ServiceTeamController {
+    private final ServiceTeamService serviceTeamService;
+    private final ConversionService conversionService;
 
-    private final ServiceTeamRepository repository;
-    private final ServiceTeamService service;
-    private final QuarterRepository quarterRepository;
-    private final CityServiceRepository serviceRepository;
-
-    public ServiceTeamController(ServiceTeamRepository repository, ServiceTeamService service,
-                                 QuarterRepository quarterRepository, CityServiceRepository serviceRepository){
-        this.repository = repository;
-        this.service = service;
-        this.quarterRepository = quarterRepository;
-        this.serviceRepository = serviceRepository;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ServiceTeamDto> getById(@PathVariable Long service,
+                                            @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(serviceTeamService.findById(id, service), ServiceTeamDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody ServiceTeamDto data){
-        data.setCityServiceId(serviceRepository.findByType(data.getServiceType()).getId());
-        data.setQuarterId(quarterRepository.findByName(data.getQuarterName()).getId());
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @GetMapping()
+    public ResponseEntity<List<ServiceTeamDto>> getAll(@PathVariable Long service) {
+        return ResponseEntity.ok(serviceTeamService.findAll(service).stream()
+                .map(e -> conversionService.convert(e, ServiceTeamDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody ServiceTeamDto data){
-        return save(data);
+    @PostMapping()
+    public ResponseEntity<?> save(@PathVariable Long service,
+                                  @RequestBody ServiceTeamDto dto) {
+        dto.setCityServiceId(service);
+        serviceTeamService.save(conversionService.convert(dto, ServiceTeamEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<ServiceTeamEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        serviceTeamService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getById(@RequestParam Integer id){
-        ServiceTeamEntity entity = repository.findById(id).get();
-        return ResponseEntity.ok(service.prepareDto(entity));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long service,
+                                        @PathVariable Long id,
+                                        @RequestBody ServiceTeamDto dto) {
+        dto.setId(id);
+        dto.setCityServiceId(service);
+        serviceTeamService.save(conversionService.convert(dto, ServiceTeamEntity.class));
+        return ResponseEntity.ok().build();
     }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam Integer id){
-        repository.deleteById(id);
-        return ResponseEntity.ok("");
-    }
-
 }

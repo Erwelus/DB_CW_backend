@@ -39,12 +39,12 @@ public class QuarterService {
     }
 
     public Double calculateCost(Long id) {
-        List<Long> streets = streetService.findAllByQuarter(id).stream().map(StreetEntity::getId).collect(Collectors.toList());
+        List<Long> streets = streetService.findAll(id).stream().map(StreetEntity::getId).collect(Collectors.toList());
         return streets.stream().mapToDouble(streetService::calculateCost).sum();
     }
 
     public Double getPercentage(Long id) {
-        List<Long> streets = streetService.findAllByQuarter(id).stream().map(StreetEntity::getId).collect(Collectors.toList());
-        return streets.stream().mapToInt(streetService::getPercentage).average().orElse(0);
+        List<Long> streets = streetService.findAll(id).stream().map(StreetEntity::getId).collect(Collectors.toList());
+        return streets.stream().mapToDouble(streetService::getPercentage).average().orElse(0);
     }
 }

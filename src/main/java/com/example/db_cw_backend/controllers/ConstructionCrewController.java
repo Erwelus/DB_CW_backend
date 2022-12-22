@@ -13,25 +13,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/model/{model}/crew")
 @RequiredArgsConstructor
-public class ConstructionCrewController {
+public class ConstructionCrewController extends AbstractController {
     private final ConstructionCrewService constructionCrewService;
     private final ConversionService conversionService;
 
-    @GetMapping(value = "/{model}/{id}")
-    public ResponseEntity<CityServiceDto> getById(@PathVariable Long model,
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ConstructionCrewDto> getById(@PathVariable Long model,
                                                   @PathVariable Long id) {
         return ResponseEntity.ok(conversionService.convert(constructionCrewService.findById(id, model), ConstructionCrewDto.class));
     }
 
-    @GetMapping(value = "/{model}")
-    public ResponseEntity<List<CityServiceDto>> getAll(@PathVariable Long model) {
+    @GetMapping()
+    public ResponseEntity<List<ConstructionCrewDto>> getAll(@PathVariable Long model) {
         return ResponseEntity.ok(constructionCrewService.findAll(model).stream()
                 .map(e -> conversionService.convert(e, ConstructionCrewDto.class))
                 .collect(Collectors.toList()));
     }
 
-    @PostMapping(value = "/{model}")
+    @PostMapping()
     public ResponseEntity<?> save(@PathVariable Long model,
                                   @RequestBody ConstructionCrewDto dto) {
         dto.setModelId(model);
@@ -39,13 +40,13 @@ public class ConstructionCrewController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/{model}/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         constructionCrewService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/{model}/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateById(@PathVariable Long model,
                                         @PathVariable Long id,
                                         @RequestBody ConstructionCrewDto dto) {
@@ -54,5 +55,4 @@ public class ConstructionCrewController {
         constructionCrewService.save(conversionService.convert(dto, ConstructionCrewEntity.class));
         return ResponseEntity.ok().build();
     }
-
 }

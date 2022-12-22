@@ -1,91 +1,67 @@
 package com.example.db_cw_backend.controllers;
 
-import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.StreetEntity;
-import com.example.db_cw_backend.model.StreetStreetEntity;
-import com.example.db_cw_backend.repository.QuarterRepository;
-import com.example.db_cw_backend.repository.StreetRepository;
-import com.example.db_cw_backend.repository.StreetStreetRepository;
 import com.example.db_cw_backend.service.StreetService;
-import com.example.db_cw_backend.service.StreetStreetService;
-import com.example.db_cw_backend.transfer.MaterialBuildingDto;
 import com.example.db_cw_backend.transfer.StreetDto;
-import com.example.db_cw_backend.transfer.StreetStreetDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/street/")
+@RequiredArgsConstructor
+@RequestMapping(value = "/model/{model}/quarter/{quarter}/street/")
 public class StreetController {
+    private final StreetService streetService;
+    private final ConversionService conversionService;
 
-    private final StreetRepository repository;
-    private final QuarterRepository quarterRepository;
-    private final StreetService service;
-    private final StreetStreetRepository streetStreetRepository;
-    private final StreetStreetService streetStreetService;
-
-    public StreetController(StreetRepository repository, QuarterRepository quarterRepository, StreetService service,
-                            StreetStreetRepository streetStreetRepository, StreetStreetService streetStreetService){
-        this.repository = repository;
-        this.quarterRepository = quarterRepository;
-        this.service = service;
-        this.streetStreetRepository = streetStreetRepository;
-        this.streetStreetService = streetStreetService;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<StreetDto> getById(@PathVariable Long quarter,
+                                                  @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(streetService.findById(id, quarter), StreetDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody StreetDto data){
-        data.setQuarterId(quarterRepository.findByName(data.getQuarterName()).getId());
-        StreetEntity entity = service.prepareEntity(data);
-        repository.save(entity);
-        streetStreetRepository.deleteAllByStreet1Id(entity.getId());
-        streetStreetRepository.deleteAllByStreet2Id(entity.getId());
-        for (int i = 0; i < data.getStreetList().size(); i++) {
-            StreetStreetDto streetStreetDto = new StreetStreetDto();
-            streetStreetDto.setStreet1Id(entity.getId());
-            streetStreetDto.setStreet2Id(repository.findByName(data.getStreetList().get(i)).getId());
-            streetStreetRepository.save(streetStreetService.prepareEntity(streetStreetDto));
-        }
-        return ResponseEntity.ok("");
+    @GetMapping()
+    public ResponseEntity<List<StreetDto>> getAll(@PathVariable Long quarter) {
+        return ResponseEntity.ok(streetService.findAll(quarter).stream()
+                .map(e -> conversionService.convert(e, StreetDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody StreetDto data){
-        data.setId(repository.findByName(data.getOldName()).getId());
-        return save(data);
+    @PostMapping()
+    public ResponseEntity<?> save(@PathVariable Long quarter,
+                                  @RequestBody StreetDto dto) {
+        dto.setQuarterId(quarter);
+        streetService.save(conversionService.convert(dto, StreetEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<StreetEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        streetService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getByName(@RequestParam String name){
-        StreetEntity entity = repository.findByName(name);
-        List<StreetStreetEntity> streetStreetEntities = streetStreetRepository.findAllByStreet1Id(entity.getId());
-        List<String> streetNameList = new ArrayList<>(streetStreetEntities.size());
-        for (StreetStreetEntity current: streetStreetEntities) {
-            streetNameList.add(current.getStreet2ByStreet2Id().getName());
-        }
-        return ResponseEntity.ok(service.prepareDto(entity, streetNameList));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long quarter,
+                                        @PathVariable Long id,
+                                        @RequestBody StreetDto dto) {
+        dto.setId(id);
+        dto.setQuarterId(quarter);
+        streetService.save(conversionService.convert(dto, StreetEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam String name){
-        repository.deleteByName(name);
-        return ResponseEntity.ok("");
+    @PostMapping(value = "/{id}/cost")
+    public ResponseEntity<Double> getCost(@PathVariable Long id) {
+        return ResponseEntity.ok(streetService.calculateCost(id));
     }
 
-    @GetMapping("quarter")
-    public ResponseEntity getAllBuildingsOnStreet(@RequestParam String name){
-        Integer id = quarterRepository.findByName(name).getId();
-        List<StreetEntity> entityList = repository.findAllByQuarterId(id);
-        return ResponseEntity.ok(entityList);
+    @PostMapping(value = "/{id}/percent")
+    public ResponseEntity<Double> getPercent(@PathVariable Long id) {
+        return ResponseEntity.ok(streetService.getPercentage(id));
     }
-
 }
