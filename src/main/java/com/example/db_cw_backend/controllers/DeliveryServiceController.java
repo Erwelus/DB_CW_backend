@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/model/{model}/material/{material}/delivery/")
+@RequestMapping(value = "/model/{model}/material/{material}/delivery")
 public class DeliveryServiceController extends AbstractController {
     private final DeliveryServiceService deliveryServiceService;
     private final ConversionService conversionService;

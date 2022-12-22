@@ -5,22 +5,23 @@ import javax.persistence.*;
 @Entity
 @Table(name = "material_building")
 public class MaterialInBuilding {
-    private MaterialBuildingPK id;
+    private Long id;
     private MaterialEntity material;
     private BuildingEntity building;
     private Long quantity;
 
-    @EmbeddedId
-    public MaterialBuildingPK getId() {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    public Long getId() {
         return id;
     }
 
-    public void setId(MaterialBuildingPK id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @ManyToOne
-    @MapsId("materialId")
     @JoinColumn(name = "material_id")
     public MaterialEntity getMaterial() {
         return material;
@@ -31,7 +32,6 @@ public class MaterialInBuilding {
     }
 
     @ManyToOne
-    @MapsId("buildingId")
     @JoinColumn(name = "building_id")
     public BuildingEntity getBuilding() {
         return building;

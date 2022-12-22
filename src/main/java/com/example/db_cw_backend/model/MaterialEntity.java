@@ -15,8 +15,8 @@ public class MaterialEntity {
     private List<MaterialInBuilding> buildings;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -26,7 +26,7 @@ public class MaterialEntity {
     }
 
     @Basic
-    @Column(name = "type", nullable = false, length = -1)
+    @Column(name = "type")
     public String getType() {
         return type;
     }
@@ -36,7 +36,7 @@ public class MaterialEntity {
     }
 
     @Basic
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity")
     public Integer getQuantity() {
         return quantity;
     }
@@ -46,7 +46,7 @@ public class MaterialEntity {
     }
 
     @Basic
-    @Column(name = "price", nullable = false, precision = 0)
+    @Column(name = "price")
     public Float getPrice() {
         return price;
     }

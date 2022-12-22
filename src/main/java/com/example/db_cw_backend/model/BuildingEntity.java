@@ -1,5 +1,7 @@
 package com.example.db_cw_backend.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +20,7 @@ public class BuildingEntity {
     private List<MaterialInBuilding> materials;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue
     @Column(name = "id", nullable = false)
     public Long getId() {
         return id;
@@ -29,7 +31,8 @@ public class BuildingEntity {
     }
 
     @Basic
-    @Column(name = "type", nullable = false)
+    @NotNull
+    @Column(name = "type")
     public String getType() {
         return type;
     }
@@ -49,7 +52,8 @@ public class BuildingEntity {
     }
 
     @Basic
-    @Column(name = "floor_number", nullable = false)
+    @NotNull
+    @Column(name = "floor_number")
     public Integer getFloorNumber() {
         return floorNumber;
     }
@@ -59,7 +63,8 @@ public class BuildingEntity {
     }
 
     @Basic
-    @Column(name = "readiness_coefficient", nullable = false)
+    @NotNull
+    @Column(name = "readiness_coefficient")
     public Integer getReadinessCoefficient() {
         return readinessCoefficient;
     }

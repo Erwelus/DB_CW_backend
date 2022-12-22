@@ -8,10 +8,12 @@ import com.example.db_cw_backend.repository.ModelRepository;
 import com.example.db_cw_backend.transfer.CityServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class CityServiceDtoToEntity implements Converter<CityServiceDto, CityServiceEntity> {
     private final ModelRepository modelRepository;

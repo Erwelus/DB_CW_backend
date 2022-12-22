@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/model/{model}/quarter/{quarter}/street/")
-public class StreetController {
+@RequestMapping(value = "/model/{model}/quarter/{quarter}/street")
+public class StreetController extends AbstractController {
     private final StreetService streetService;
     private final ConversionService conversionService;
 

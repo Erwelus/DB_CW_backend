@@ -9,10 +9,12 @@ import com.example.db_cw_backend.repository.QuarterRepository;
 import com.example.db_cw_backend.transfer.ServiceTeamDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class ServiceTeamDtoToEntity implements Converter<ServiceTeamDto, ServiceTeamEntity> {
     private final QuarterRepository quarterRepository;

@@ -12,8 +12,8 @@ public class ServiceTeamEntity {
     private CityServiceEntity cityService;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -23,7 +23,7 @@ public class ServiceTeamEntity {
     }
 
     @Basic
-    @Column(name = "rate", nullable = false, precision = 0)
+    @Column(name = "rate")
     public Float getRate() {
         return rate;
     }
@@ -46,7 +46,7 @@ public class ServiceTeamEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "quarter_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "quarter_id", referencedColumnName = "id")
     public QuarterEntity getQuarter() {
         return quarter;
     }
@@ -55,7 +55,7 @@ public class ServiceTeamEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "service_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
     public CityServiceEntity getCityService() {
         return cityService;
     }

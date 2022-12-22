@@ -9,8 +9,8 @@ public class ModelEntity {
     private String name;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -20,7 +20,7 @@ public class ModelEntity {
     }
 
     @Basic
-    @Column(name = "name", length = -1)
+    @Column(name = "name")
     public String getName() {
         return name;
     }

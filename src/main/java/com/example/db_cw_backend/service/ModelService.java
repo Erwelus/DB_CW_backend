@@ -3,11 +3,13 @@ package com.example.db_cw_backend.service;
 import com.example.db_cw_backend.model.ModelEntity;
 import com.example.db_cw_backend.model.QuarterEntity;
 import com.example.db_cw_backend.repository.ModelRepository;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class ModelService {
     private final ModelRepository repository;
     private final QuarterService quarterService;

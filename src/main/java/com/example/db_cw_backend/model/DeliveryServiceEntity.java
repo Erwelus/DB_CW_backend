@@ -1,5 +1,7 @@
 package com.example.db_cw_backend.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +16,8 @@ public class DeliveryServiceEntity {
     private List<ConstructionCrewEntity> crews;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -25,7 +27,8 @@ public class DeliveryServiceEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, length = -1)
+    @NotNull
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -35,7 +38,8 @@ public class DeliveryServiceEntity {
     }
 
     @Basic
-    @Column(name = "rate", nullable = false, precision = 0)
+    @NotNull
+    @Column(name = "rate")
     public Float getRate() {
         return rate;
     }

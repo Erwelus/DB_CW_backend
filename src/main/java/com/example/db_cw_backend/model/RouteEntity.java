@@ -14,8 +14,8 @@ public class RouteEntity {
     private List<QuarterEntity> quarters;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -25,7 +25,7 @@ public class RouteEntity {
     }
 
     @Basic
-    @Column(name = "type", nullable = false, length = -1)
+    @Column(name = "type")
     public String getType() {
         return type;
     }

@@ -9,10 +9,12 @@ import com.example.db_cw_backend.repository.StreetRepository;
 import com.example.db_cw_backend.transfer.RouteDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class RouteDtoToEntity implements Converter<RouteDto, RouteEntity> {
     private final ModelRepository modelRepository;

@@ -6,9 +6,11 @@ import com.example.db_cw_backend.model.MaterialEntity;
 import com.example.db_cw_backend.transfer.DeliveryServiceDto;
 import com.example.db_cw_backend.transfer.MaterialDto;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class MaterialEntityToDto implements Converter<MaterialEntity, MaterialDto> {
     @Override
     public MaterialDto convert(MaterialEntity source) {

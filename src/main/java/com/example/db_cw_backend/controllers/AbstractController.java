@@ -22,7 +22,7 @@ public abstract class AbstractController {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleNoSuchMethodException(NoSuchMethodException e) {
-        return ResponseEntity.status(400).body(e.getMessage());
+    public ResponseEntity<String> handleNoSuchMethodException(EntityNotFoundException e) {
+        return ResponseEntity.status(400).body("Entity not found");
     }
 }

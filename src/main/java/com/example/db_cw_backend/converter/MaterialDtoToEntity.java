@@ -7,10 +7,12 @@ import com.example.db_cw_backend.repository.ModelRepository;
 import com.example.db_cw_backend.transfer.MaterialDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class MaterialDtoToEntity implements Converter<MaterialDto, MaterialEntity> {
     private final ModelRepository modelRepository;

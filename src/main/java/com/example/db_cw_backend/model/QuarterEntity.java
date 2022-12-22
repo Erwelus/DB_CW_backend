@@ -13,8 +13,8 @@ public class QuarterEntity {
     private List<RouteEntity> routes;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -24,7 +24,7 @@ public class QuarterEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, length = -1)
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -49,7 +49,7 @@ public class QuarterEntity {
     private Integer x;
 
     @Basic
-    @Column(name = "x", nullable = false)
+    @Column(name = "x")
     public Integer getX() {
         return x;
     }
@@ -61,7 +61,7 @@ public class QuarterEntity {
     private Integer y;
 
     @Basic
-    @Column(name = "y", nullable = false)
+    @Column(name = "y")
     public Integer getY() {
         return y;
     }

@@ -1,13 +1,13 @@
 package com.example.db_cw_backend.service;
 
-import com.example.db_cw_backend.model.DeliveryServiceEntity;
 import com.example.db_cw_backend.model.MaterialInBuilding;
-import com.example.db_cw_backend.repository.DeliveryServiceRepository;
 import com.example.db_cw_backend.repository.MaterialInBuildingRepository;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
+@Service
 public class MaterialInBuildingService {
     private final MaterialInBuildingRepository repository;
 

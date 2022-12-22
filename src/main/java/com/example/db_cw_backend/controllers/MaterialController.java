@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/model/{model}/material")
-public class MaterialController {
+public class MaterialController extends AbstractController {
     private final MaterialService materialService;
     private final ConversionService conversionService;
 

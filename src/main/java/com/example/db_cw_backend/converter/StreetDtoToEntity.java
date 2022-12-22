@@ -7,10 +7,12 @@ import com.example.db_cw_backend.repository.RouteRepository;
 import com.example.db_cw_backend.transfer.StreetDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class StreetDtoToEntity implements Converter<StreetDto, StreetEntity> {
     private final QuarterRepository quarterRepository;

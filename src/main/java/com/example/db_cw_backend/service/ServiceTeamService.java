@@ -1,14 +1,14 @@
 package com.example.db_cw_backend.service;
 
-import com.example.db_cw_backend.model.RouteEntity;
 import com.example.db_cw_backend.model.ServiceTeamEntity;
-import com.example.db_cw_backend.repository.RouteRepository;
 import com.example.db_cw_backend.repository.ServiceTeamRepository;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class ServiceTeamService {
     private final ServiceTeamRepository repository;
 

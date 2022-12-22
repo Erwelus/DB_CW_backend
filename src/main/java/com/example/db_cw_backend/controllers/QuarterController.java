@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/model/{model}/quarter/")
-public class QuarterController {
+@RequestMapping(value = "/model/{model}/quarter")
+public class QuarterController extends AbstractController {
     private final QuarterService quarterService;
     private final ConversionService conversionService;
 

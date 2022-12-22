@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/model/{model}/service/{service}/service_team/")
-public class ServiceTeamController {
+@RequestMapping(value = "/model/{model}/service/{service}/service_team")
+public class ServiceTeamController extends AbstractController {
     private final ServiceTeamService serviceTeamService;
     private final ConversionService conversionService;
 

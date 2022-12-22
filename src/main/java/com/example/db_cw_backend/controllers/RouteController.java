@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/model/{model}/route/")
-public class RouteController {
+@RequestMapping(value = "/model/{model}/route")
+public class RouteController extends AbstractController {
     private final RouteService routeService;
     private final ConversionService conversionService;
 

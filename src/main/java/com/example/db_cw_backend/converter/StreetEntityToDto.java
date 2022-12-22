@@ -4,9 +4,11 @@ import com.example.db_cw_backend.model.RouteEntity;
 import com.example.db_cw_backend.model.StreetEntity;
 import com.example.db_cw_backend.transfer.StreetDto;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class StreetEntityToDto implements Converter<StreetEntity, StreetDto> {
     @Override
     public StreetDto convert(StreetEntity source) {

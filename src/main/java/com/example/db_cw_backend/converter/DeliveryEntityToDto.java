@@ -5,9 +5,11 @@ import com.example.db_cw_backend.model.DeliveryServiceEntity;
 import com.example.db_cw_backend.transfer.ConstructionCrewDto;
 import com.example.db_cw_backend.transfer.DeliveryServiceDto;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class DeliveryEntityToDto implements Converter<DeliveryServiceEntity, DeliveryServiceDto> {
     @Override
     public DeliveryServiceDto convert(DeliveryServiceEntity source) {
