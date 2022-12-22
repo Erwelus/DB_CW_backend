@@ -1,6 +1,7 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.StreetEntity;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.service.StreetService;
 import com.example.db_cw_backend.transfer.StreetDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class StreetController extends AbstractController {
     private final StreetService streetService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<StreetDto> getById(@PathVariable Long quarter,
@@ -36,12 +38,14 @@ public class StreetController extends AbstractController {
                                   @RequestBody StreetDto dto) {
         dto.setQuarterId(quarter);
         streetService.save(conversionService.convert(dto, StreetEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         streetService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +56,7 @@ public class StreetController extends AbstractController {
         dto.setId(id);
         dto.setQuarterId(quarter);
         streetService.save(conversionService.convert(dto, StreetEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 

@@ -2,6 +2,7 @@ package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.ConstructionCrewEntity;
 import com.example.db_cw_backend.service.ConstructionCrewService;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.transfer.CityServiceDto;
 import com.example.db_cw_backend.transfer.ConstructionCrewDto;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class ConstructionCrewController extends AbstractController {
     private final ConstructionCrewService constructionCrewService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ConstructionCrewDto> getById(@PathVariable Long model,
@@ -37,12 +39,14 @@ public class ConstructionCrewController extends AbstractController {
                                   @RequestBody ConstructionCrewDto dto) {
         dto.setModelId(model);
         constructionCrewService.save(conversionService.convert(dto, ConstructionCrewEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         constructionCrewService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -53,6 +57,7 @@ public class ConstructionCrewController extends AbstractController {
         dto.setId(id);
         dto.setModelId(model);
         constructionCrewService.save(conversionService.convert(dto, ConstructionCrewEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 }

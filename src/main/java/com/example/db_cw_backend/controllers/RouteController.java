@@ -1,6 +1,7 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.RouteEntity;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.service.RouteService;
 import com.example.db_cw_backend.transfer.RouteDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class RouteController extends AbstractController {
     private final RouteService routeService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<RouteDto> getById(@PathVariable Long model,
@@ -36,12 +38,14 @@ public class RouteController extends AbstractController {
                                   @RequestBody RouteDto dto) {
         dto.setModelId(model);
         routeService.save(conversionService.convert(dto, RouteEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         routeService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +56,7 @@ public class RouteController extends AbstractController {
         dto.setId(id);
         dto.setModelId(model);
         routeService.save(conversionService.convert(dto, RouteEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 }

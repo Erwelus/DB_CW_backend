@@ -2,6 +2,7 @@ package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.MaterialInBuilding;
 import com.example.db_cw_backend.service.MaterialInBuildingService;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.transfer.MaterialInBuildingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class MaterialBuildingController extends AbstractController {
     private final MaterialInBuildingService materialInBuildingService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping()
     public ResponseEntity<List<MaterialInBuildingDto>> getAll() {
@@ -28,12 +30,14 @@ public class MaterialBuildingController extends AbstractController {
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody MaterialInBuildingDto dto) {
         materialInBuildingService.save(conversionService.convert(dto, MaterialInBuilding.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         materialInBuildingService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 }

@@ -2,6 +2,7 @@ package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.DeliveryServiceEntity;
 import com.example.db_cw_backend.service.DeliveryServiceService;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.transfer.DeliveryServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class DeliveryServiceController extends AbstractController {
     private final DeliveryServiceService deliveryServiceService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<DeliveryServiceDto> getById(@PathVariable Long material,
@@ -36,12 +38,14 @@ public class DeliveryServiceController extends AbstractController {
                                   @RequestBody DeliveryServiceDto dto) {
         dto.setMaterialId(material);
         deliveryServiceService.save(conversionService.convert(dto, DeliveryServiceEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         deliveryServiceService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +56,7 @@ public class DeliveryServiceController extends AbstractController {
         dto.setId(id);
         dto.setMaterialId(material);
         deliveryServiceService.save(conversionService.convert(dto, DeliveryServiceEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 }

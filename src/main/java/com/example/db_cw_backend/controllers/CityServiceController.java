@@ -2,6 +2,7 @@ package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.CityServiceEntity;
 import com.example.db_cw_backend.service.CityServiceService;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.transfer.CityServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class CityServiceController extends AbstractController {
     private final CityServiceService cityServiceService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CityServiceDto> getById(@PathVariable Long model,
@@ -36,12 +38,14 @@ public class CityServiceController extends AbstractController {
                                   @RequestBody CityServiceDto dto) {
         dto.setModelId(model);
         cityServiceService.save(conversionService.convert(dto, CityServiceEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         cityServiceService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +56,7 @@ public class CityServiceController extends AbstractController {
         dto.setId(id);
         dto.setModelId(model);
         cityServiceService.save(conversionService.convert(dto, CityServiceEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 }

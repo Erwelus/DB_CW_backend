@@ -2,6 +2,7 @@ package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.ModelEntity;
 import com.example.db_cw_backend.service.ModelService;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.transfer.BuildingDto;
 import com.example.db_cw_backend.transfer.ModelDto;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class ModelController extends AbstractController{
     private final ModelService modelService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ModelDto> getById(@PathVariable Long id) {
@@ -34,12 +36,14 @@ public class ModelController extends AbstractController{
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody ModelDto dto) {
         modelService.save(conversionService.convert(dto, ModelEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         modelService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -47,6 +51,7 @@ public class ModelController extends AbstractController{
     public ResponseEntity<?> updateById(@PathVariable Long id, @RequestBody ModelDto dto) {
         dto.setId(id);
         modelService.save(conversionService.convert(dto, ModelEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 

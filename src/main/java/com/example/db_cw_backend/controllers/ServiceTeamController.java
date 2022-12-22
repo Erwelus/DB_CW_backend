@@ -1,6 +1,7 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.ServiceTeamEntity;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.service.ServiceTeamService;
 import com.example.db_cw_backend.transfer.ServiceTeamDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ServiceTeamController extends AbstractController {
     private final ServiceTeamService serviceTeamService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ServiceTeamDto> getById(@PathVariable Long service,
@@ -36,12 +38,14 @@ public class ServiceTeamController extends AbstractController {
                                   @RequestBody ServiceTeamDto dto) {
         dto.setCityServiceId(service);
         serviceTeamService.save(conversionService.convert(dto, ServiceTeamEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         serviceTeamService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +56,7 @@ public class ServiceTeamController extends AbstractController {
         dto.setId(id);
         dto.setCityServiceId(service);
         serviceTeamService.save(conversionService.convert(dto, ServiceTeamEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 }

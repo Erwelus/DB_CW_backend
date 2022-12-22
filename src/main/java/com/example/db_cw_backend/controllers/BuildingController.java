@@ -4,6 +4,7 @@ import com.example.db_cw_backend.model.BuildingEntity;
 import com.example.db_cw_backend.model.ModelEntity;
 import com.example.db_cw_backend.service.BuildingService;
 import com.example.db_cw_backend.service.ModelService;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.transfer.BuildingDto;
 import com.example.db_cw_backend.transfer.ModelDto;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class BuildingController extends AbstractController {
     private final BuildingService buildingService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<BuildingDto> getById(@PathVariable Long street,
@@ -39,12 +41,14 @@ public class BuildingController extends AbstractController {
                                   @RequestBody BuildingDto dto) {
         dto.setStreetId(street);
         buildingService.save(conversionService.convert(dto, BuildingEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         buildingService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -55,6 +59,7 @@ public class BuildingController extends AbstractController {
         dto.setId(id);
         dto.setStreetId(street);
         buildingService.save(conversionService.convert(dto, BuildingEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 

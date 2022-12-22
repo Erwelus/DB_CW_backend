@@ -1,6 +1,7 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.QuarterEntity;
+import com.example.db_cw_backend.service.NotificationService;
 import com.example.db_cw_backend.service.QuarterService;
 import com.example.db_cw_backend.transfer.QuarterDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class QuarterController extends AbstractController {
     private final QuarterService quarterService;
     private final ConversionService conversionService;
+    private final NotificationService notificationService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<QuarterDto> getById(@PathVariable Long model,
@@ -36,12 +38,14 @@ public class QuarterController extends AbstractController {
                                   @RequestBody QuarterDto dto) {
         dto.setModelId(model);
         quarterService.save(conversionService.convert(dto, QuarterEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         quarterService.deleteById(id);
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +56,7 @@ public class QuarterController extends AbstractController {
         dto.setId(id);
         dto.setModelId(model);
         quarterService.save(conversionService.convert(dto, QuarterEntity.class));
+        notificationService.sendNotification();
         return ResponseEntity.ok().build();
     }
 
