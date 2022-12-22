@@ -1,36 +1,35 @@
 package com.example.db_cw_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "building")
 public class BuildingEntity {
-    private Integer id;
+    private Long id;
     private String type;
     private String name;
     private Integer floorNumber;
     private Integer readinessCoefficient;
-    private Integer streetId;
-    private Integer committeeId;
-    private Integer crewId;
-    private StreetEntity streetByStreetId;
-    private ConstructionCrewEntity constructionCrewByCrewId;
-    private CommitteeEntity committeeByCommitteeId;
+    private StreetEntity street;
+    private ConstructionCrewEntity constructionCrew;
+    private List<CityServiceEntity> services;
+    private List<MaterialInBuilding> materials;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "type", nullable = false, length = -1)
+    @Column(name = "type", nullable = false)
     public String getType() {
         return type;
     }
@@ -40,7 +39,7 @@ public class BuildingEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = -1)
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -69,61 +68,44 @@ public class BuildingEntity {
         this.readinessCoefficient = readinessCoefficient;
     }
 
-    @Basic
-    @Column(name = "street_id", nullable = false)
-    public Integer getStreetId() {
-        return streetId;
+    @ManyToOne
+    @JoinColumn(name = "street_id", referencedColumnName = "id")
+    public StreetEntity getStreet() {
+        return street;
     }
-
-    public void setStreetId(Integer streetId) {
-        this.streetId = streetId;
-    }
-
-    @Basic
-    @Column(name = "committee_id", nullable = false)
-    public Integer getCommitteeId() {
-        return committeeId;
-    }
-
-    public void setCommitteeId(Integer committeeId) {
-        this.committeeId = committeeId;
-    }
-
-    @Basic
-    @Column(name = "crew_id", nullable = false)
-    public Integer getCrewId() {
-        return crewId;
-    }
-
-    public void setCrewId(Integer crewId) {
-        this.crewId = crewId;
+    public void setStreet(StreetEntity street) {
+        this.street = street;
     }
 
     @ManyToOne
-    @JoinColumn(name = "street_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public StreetEntity getStreetByStreetId() {
-        return streetByStreetId;
+    @JoinColumn(name = "crew_id", referencedColumnName = "id")
+    public ConstructionCrewEntity getConstructionCrew() {
+        return constructionCrew;
     }
-    public void setStreetByStreetId(StreetEntity streetByStreetId) {
-        this.streetByStreetId = streetByStreetId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "crew_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public ConstructionCrewEntity getConstructionCrewByCrewId() {
-        return constructionCrewByCrewId;
-    }
-    public void setConstructionCrewByCrewId(ConstructionCrewEntity constructionCrew) {
-        this.constructionCrewByCrewId = constructionCrew;
+    public void setConstructionCrew(ConstructionCrewEntity constructionCrew) {
+        this.constructionCrew = constructionCrew;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "committee_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public CommitteeEntity getCommitteeByCommitteeId() {
-        return committeeByCommitteeId;
+    @ManyToMany
+    @JoinTable(
+            name = "building_service",
+            joinColumns = @JoinColumn(name = "building_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id"))
+    public List<CityServiceEntity> getServices() {
+        return services;
     }
-    public void setCommitteeByCommitteeId(CommitteeEntity committee) {
-        this.committeeByCommitteeId = committee;
+
+    public void setServices(List<CityServiceEntity> services) {
+        this.services = services;
+    }
+
+    @OneToMany(mappedBy = "building")
+    public List<MaterialInBuilding> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(List<MaterialInBuilding> materials) {
+        this.materials = materials;
     }
 
     @Override

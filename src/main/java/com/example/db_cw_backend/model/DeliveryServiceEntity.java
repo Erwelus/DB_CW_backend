@@ -1,25 +1,26 @@
 package com.example.db_cw_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "delivery_service")
 public class DeliveryServiceEntity {
-    private Integer id;
+    private Long id;
     private String name;
     private Float rate;
-    private Integer materialId;
-    private MaterialEntity materialByMaterialId;
+    private MaterialEntity material;
+    private List<ConstructionCrewEntity> crews;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -43,23 +44,22 @@ public class DeliveryServiceEntity {
         this.rate = rate;
     }
 
-    @Basic
-    @Column(name = "material_id", nullable = false)
-    public Integer getMaterialId() {
-        return materialId;
-    }
-
-    public void setMaterialId(Integer materialId) {
-        this.materialId = materialId;
-    }
-
     @ManyToOne
-    @JoinColumn(name = "material_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public MaterialEntity getMaterialByMaterialId() {
-        return materialByMaterialId;
+    @JoinColumn(name = "material_id", referencedColumnName = "id")
+    public MaterialEntity getMaterial() {
+        return material;
     }
-    public void setMaterialByMaterialId(MaterialEntity materialByMaterialId) {
-        this.materialByMaterialId = materialByMaterialId;
+    public void setMaterial(MaterialEntity material) {
+        this.material = material;
+    }
+
+    @ManyToMany(mappedBy = "deliveryServices")
+    public List<ConstructionCrewEntity> getCrews() {
+        return crews;
+    }
+
+    public void setCrews(List<ConstructionCrewEntity> crews) {
+        this.crews = crews;
     }
 
     @Override

@@ -8,12 +8,8 @@ import java.io.Serializable;
 
 @Data
 public class ServiceTeamDto implements Serializable {
-    private Integer id;
+    private Long id;
     private Float rate;
-    private Integer quarterId;
-    private Integer cityServiceId;
-    private QuarterEntity quarterByQuarterId;
-    private CityServiceEntity cityServiceByServiceId;
-    private String serviceType;
-    private String quarterName;
+    private Long quarterId;
+    private Long cityServiceId;
 }

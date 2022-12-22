@@ -1,23 +1,25 @@
 package com.example.db_cw_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "quarter")
 public class QuarterEntity {
-    private Integer id;
+    private Long id;
     private String name;
     private ModelEntity model;
+    private List<RouteEntity> routes;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -76,5 +78,14 @@ public class QuarterEntity {
 
     public void setModel(ModelEntity model) {
         this.model = model;
+    }
+
+    @ManyToMany(mappedBy = "quarters")
+    public List<RouteEntity> getRoutes() {
+        return routes;
+    }
+
+    public void setRoutes(List<RouteEntity> routes) {
+        this.routes = routes;
     }
 }

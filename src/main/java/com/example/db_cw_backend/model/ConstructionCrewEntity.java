@@ -1,23 +1,25 @@
 package com.example.db_cw_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "construction_crew")
 public class ConstructionCrewEntity {
-    private Integer id;
+    private Long id;
     private Integer size;
     private ModelEntity model;
+    private List<DeliveryServiceEntity> deliveryServices;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,6 +41,19 @@ public class ConstructionCrewEntity {
 
     public void setModel(ModelEntity model) {
         this.model = model;
+    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "delivery_construction",
+            joinColumns = @JoinColumn(name = "delivery_building_id"),
+            inverseJoinColumns = @JoinColumn(name = "construction_crew_id"))
+    public List<DeliveryServiceEntity> getDeliveryServices() {
+        return deliveryServices;
+    }
+
+    public void setDeliveryServices(List<DeliveryServiceEntity> deliveryServices) {
+        this.deliveryServices = deliveryServices;
     }
 
     @Override

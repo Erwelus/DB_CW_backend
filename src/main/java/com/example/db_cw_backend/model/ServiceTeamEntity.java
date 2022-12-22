@@ -6,21 +6,19 @@ import java.util.Objects;
 @Entity
 @Table(name = "service_team")
 public class ServiceTeamEntity {
-    private Integer id;
+    private Long id;
     private Float rate;
-    private Integer quarterId;
-    private Integer cityServiceId;
-    private QuarterEntity quarterByQuarterId;
-    private CityServiceEntity cityServiceByServiceId;
+    private QuarterEntity quarter;
+    private CityServiceEntity cityService;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -47,41 +45,21 @@ public class ServiceTeamEntity {
         return Objects.hash(id, rate);
     }
 
-    @Basic
-    @Column(name = "quarter_id", nullable = false)
-    public Integer getQuarterId() {
-        return quarterId;
-    }
-
-    public void setQuarterId(Integer quarterId) {
-        this.quarterId = quarterId;
-    }
-
-    @Basic
-    @Column(name = "service_id", nullable = false)
-    public Integer getCityServiceId() {
-        return cityServiceId;
-    }
-
-    public void setCityServiceId(Integer cityServiceId) {
-        this.cityServiceId = cityServiceId;
-    }
-
     @ManyToOne
     @JoinColumn(name = "quarter_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public QuarterEntity getQuarterByQuarterId() {
-        return quarterByQuarterId;
+    public QuarterEntity getQuarter() {
+        return quarter;
     }
-    public void setQuarterByQuarterId(QuarterEntity quarterByQuarterId) {
-        this.quarterByQuarterId = quarterByQuarterId;
+    public void setQuarter(QuarterEntity quarter) {
+        this.quarter = quarter;
     }
 
     @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public CityServiceEntity getCityServiceByServiceId() {
-        return cityServiceByServiceId;
+    public CityServiceEntity getCityService() {
+        return cityService;
     }
-    public void setCityServiceByServiceId(CityServiceEntity cityServiceByServiceId) {
-        this.cityServiceByServiceId = cityServiceByServiceId;
+    public void setCityService(CityServiceEntity cityService) {
+        this.cityService = cityService;
     }
 }

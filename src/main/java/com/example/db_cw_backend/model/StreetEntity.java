@@ -7,19 +7,19 @@ import java.util.Objects;
 @Entity
 @Table(name = "street")
 public class StreetEntity {
-    private Integer id;
+    private Long id;
     private String name;
     private QuarterEntity quarter;
-    private List<StreetEntity> crossedStreets;
+    private List<RouteEntity> routes;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,5 +56,12 @@ public class StreetEntity {
         this.quarter = quarterByQuarterId;
     }
 
+    @ManyToMany(mappedBy = "streets")
+    public List<RouteEntity> getRoutes() {
+        return routes;
+    }
 
+    public void setRoutes(List<RouteEntity> routes) {
+        this.routes = routes;
+    }
 }

@@ -1,23 +1,26 @@
 package com.example.db_cw_backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "city_service")
 public class CityServiceEntity {
-    private Integer id;
+    private Long id;
     private String type;
     private Float price;
+    private List<BuildingEntity> buildings;
+    private ModelEntity model;
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,6 +42,24 @@ public class CityServiceEntity {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    @ManyToMany(mappedBy = "services")
+    public List<BuildingEntity> getBuildings() {
+        return buildings;
+    }
+    public void setBuildings(List<BuildingEntity> buildings) {
+        this.buildings = buildings;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "model_id", referencedColumnName = "id")
+    public ModelEntity getModel() {
+        return model;
+    }
+
+    public void setModel(ModelEntity model) {
+        this.model = model;
     }
 
     @Override

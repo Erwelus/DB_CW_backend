@@ -1,73 +1,56 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.CityServiceEntity;
-import com.example.db_cw_backend.model.ServiceTeamEntity;
-import com.example.db_cw_backend.repository.CityServiceRepository;
-import com.example.db_cw_backend.repository.QuarterRepository;
-import com.example.db_cw_backend.repository.ServiceTeamRepository;
 import com.example.db_cw_backend.service.CityServiceService;
 import com.example.db_cw_backend.transfer.CityServiceDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/city_service/")
+@RequiredArgsConstructor
 public class CityServiceController {
+    private final CityServiceService cityServiceService;
+    private final ConversionService conversionService;
 
-    private final CityServiceRepository repository;
-    private final QuarterRepository quarterRepository;
-    private final ServiceTeamRepository serviceTeamRepository;
-    private final CityServiceService service;
-
-    public CityServiceController(CityServiceRepository repository, QuarterRepository quarterRepository,
-                                 ServiceTeamRepository serviceTeamRepository, CityServiceService service){
-        this.repository = repository;
-        this.quarterRepository = quarterRepository;
-        this.serviceTeamRepository = serviceTeamRepository;
-        this.service = service;
+    @GetMapping(value = "/{model}/{id}")
+    public ResponseEntity<CityServiceDto> getById(@PathVariable Long model,
+                                               @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(cityServiceService.findById(id, model), CityServiceDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody CityServiceDto data){
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @GetMapping(value = "/{model}")
+    public ResponseEntity<List<CityServiceDto>> getAll(@PathVariable Long model) {
+        return ResponseEntity.ok(cityServiceService.findAll(model).stream()
+                .map(e -> conversionService.convert(e, CityServiceDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody CityServiceDto data){
-        return save(data);
+    @PostMapping(value = "/{model}")
+    public ResponseEntity<?> save(@PathVariable Long model,
+                                  @RequestBody CityServiceDto dto) {
+        dto.setModelId(model);
+        cityServiceService.save(conversionService.convert(dto, CityServiceEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<CityServiceEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{model}/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        cityServiceService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("quarter")
-    public ResponseEntity getAllQueriesInQuarter(@RequestParam String name){
-        Integer id = quarterRepository.findByName(name).getId();
-        List<ServiceTeamEntity> teamList = serviceTeamRepository.findAllByQuarterId(id);
-        List<CityServiceEntity> entityList = new ArrayList<>(teamList.size());
-        for (ServiceTeamEntity current: teamList) {
-            entityList.add(current.getCityServiceByServiceId());
-        }
-        return ResponseEntity.ok(entityList);
+    @PutMapping(value = "/{model}/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long model,
+                                        @PathVariable Long id,
+                                        @RequestBody CityServiceDto dto) {
+        dto.setId(id);
+        dto.setModelId(model);
+        cityServiceService.save(conversionService.convert(dto, CityServiceEntity.class));
+        return ResponseEntity.ok().build();
     }
-
-    @GetMapping("single")
-    public ResponseEntity getById(@RequestParam String type){
-        CityServiceEntity entity = repository.findByType(type);
-        return ResponseEntity.ok(service.prepareDto(entity));
-    }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam String type){
-        repository.deleteByType(type);
-        return ResponseEntity.ok("");
-    }
-
 }

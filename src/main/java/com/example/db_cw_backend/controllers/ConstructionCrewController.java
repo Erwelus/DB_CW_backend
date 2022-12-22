@@ -1,55 +1,58 @@
 package com.example.db_cw_backend.controllers;
 
 import com.example.db_cw_backend.model.ConstructionCrewEntity;
-import com.example.db_cw_backend.repository.ConstructionCrewRepository;
 import com.example.db_cw_backend.service.ConstructionCrewService;
 import com.example.db_cw_backend.transfer.CityServiceDto;
 import com.example.db_cw_backend.transfer.ConstructionCrewDto;
-import com.example.db_cw_backend.transfer.IdDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/app/construction_crew/")
+@RequiredArgsConstructor
 public class ConstructionCrewController {
+    private final ConstructionCrewService constructionCrewService;
+    private final ConversionService conversionService;
 
-    private final ConstructionCrewRepository repository;
-    private final ConstructionCrewService service;
-
-    public ConstructionCrewController(ConstructionCrewRepository repository, ConstructionCrewService service){
-        this.repository = repository;
-        this.service = service;
+    @GetMapping(value = "/{model}/{id}")
+    public ResponseEntity<CityServiceDto> getById(@PathVariable Long model,
+                                                  @PathVariable Long id) {
+        return ResponseEntity.ok(conversionService.convert(constructionCrewService.findById(id, model), ConstructionCrewDto.class));
     }
 
-    @PostMapping("save")
-    public ResponseEntity save(@RequestBody ConstructionCrewDto data){
-        repository.save(service.prepareEntity(data));
-        return ResponseEntity.ok("");
+    @GetMapping(value = "/{model}")
+    public ResponseEntity<List<CityServiceDto>> getAll(@PathVariable Long model) {
+        return ResponseEntity.ok(constructionCrewService.findAll(model).stream()
+                .map(e -> conversionService.convert(e, ConstructionCrewDto.class))
+                .collect(Collectors.toList()));
     }
 
-    @PostMapping("update")
-    public ResponseEntity update(@RequestBody ConstructionCrewDto data){
-        return save(data);
+    @PostMapping(value = "/{model}")
+    public ResponseEntity<?> save(@PathVariable Long model,
+                                  @RequestBody ConstructionCrewDto dto) {
+        dto.setModelId(model);
+        constructionCrewService.save(conversionService.convert(dto, ConstructionCrewEntity.class));
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all")
-    public ResponseEntity getAllQueries(){
-        List<ConstructionCrewEntity> entityList = repository.findAll();
-        return ResponseEntity.ok(entityList);
+    @DeleteMapping(value = "/{model}/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        constructionCrewService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("single")
-    public ResponseEntity getById(@RequestParam Integer id){
-        ConstructionCrewEntity entity = repository.findById(id).get();
-        return ResponseEntity.ok(service.prepareDto(entity));
-    }
-
-    @PostMapping("delete")
-    public ResponseEntity delete(@RequestParam Integer id){
-        repository.deleteById(id);
-        return ResponseEntity.ok("");
+    @PutMapping(value = "/{model}/{id}")
+    public ResponseEntity<?> updateById(@PathVariable Long model,
+                                        @PathVariable Long id,
+                                        @RequestBody ConstructionCrewDto dto) {
+        dto.setId(id);
+        dto.setModelId(model);
+        constructionCrewService.save(conversionService.convert(dto, ConstructionCrewEntity.class));
+        return ResponseEntity.ok().build();
     }
 
 }
